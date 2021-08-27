@@ -11,4 +11,5 @@
 
     <string name="fasting_status_label">Fasting now</string>
     <string name="eating_status_label">Eating now</string>
+    <string name="status_change_time_left_label">Time left:</string>
 </resources>

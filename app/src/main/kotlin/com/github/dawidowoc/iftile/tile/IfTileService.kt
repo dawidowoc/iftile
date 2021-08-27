@@ -1,6 +1,10 @@
 package com.github.dawidowoc.iftile.tile
 
 import androidx.wear.tiles.LayoutElementBuilders
+import androidx.wear.tiles.LayoutElementBuilders.Column
+import androidx.wear.tiles.LayoutElementBuilders.LayoutElement
+import androidx.wear.tiles.LayoutElementBuilders.Row
+import androidx.wear.tiles.LayoutElementBuilders.Text
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.ResourceBuilders
 import androidx.wear.tiles.TileBuilders
@@ -15,6 +19,7 @@ import java.time.Clock
 import java.time.Duration
 import java.time.LocalTime
 import java.time.ZoneId
+import kotlin.math.floor
 
 private const val RESOURCES_VERSION = "1"
 private val REFRESH_INTERVAL = Duration.ofMinutes(1)
@@ -35,7 +40,7 @@ class IfTileService : TileProviderService() {
                     TimelineBuilders.Timeline.builder().addTimelineEntry(
                         TimelineBuilders.TimelineEntry.builder().setLayout(
                             LayoutElementBuilders.Layout.builder().setRoot(
-                                LayoutElementBuilders.Text.builder().setText(getStatus())
+                                render()
                             )
                         )
                     )
@@ -43,9 +48,25 @@ class IfTileService : TileProviderService() {
         )
     }
 
-    private fun getStatus() = if (intermittentFastingService.isFasting())
+    private fun render(): LayoutElement = Column.builder()
+        .addContent(Row.builder().addContent(Text.builder().setText(renderStatus())))
+        .addContent(
+            Row.builder().addContent(Text.builder().setText(renderTimeLeftToStatusChange()))
+        )
+        .build()
+
+    private fun renderStatus() = if (intermittentFastingService.isFasting())
         resources.getString(R.string.fasting_status_label) else
         resources.getString(R.string.eating_status_label)
+
+    private fun renderTimeLeftToStatusChange(): String {
+        val interval = intermittentFastingService.timeLeftToStatusChange()
+        return String.format(
+            "${resources.getString(R.string.status_change_time_left_label)} %dh %dmin",
+            floor(interval.toMinutes() / 60.0).toInt(),
+            interval.toMinutes() % 60
+        )
+    }
 
     override fun onResourcesRequest(requestParams: RequestBuilders.ResourcesRequest):
             ListenableFuture<ResourceBuilders.Resources> {
