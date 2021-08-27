@@ -37,5 +37,8 @@ dependencies {
     implementation 'androidx.wear.tiles:tiles:1.0.0-alpha10'
     implementation 'com.google.guava:guava:30.1.1-android'
 
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.assertj:assertj-core:3.20.2'
+
     debugImplementation 'androidx.wear.tiles:tiles-renderer:1.0.0-alpha10'
 }

@@ -8,4 +8,7 @@
 
     <string name="tile_label">IF tile</string>
     <string name="tile_description">Intermittent fasting tile</string>
+
+    <string name="fasting_status_label">Fasting now</string>
+    <string name="eating_status_label">Eating now</string>
 </resources>
