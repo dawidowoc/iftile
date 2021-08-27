@@ -5,4 +5,7 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
+
+    <string name="tile_label">IF tile</string>
+    <string name="tile_description">Intermittent fasting tile</string>
 </resources>
