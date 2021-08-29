@@ -1,5 +1,6 @@
 package com.github.dawidowoc.iftile.tile
 
+import android.preference.PreferenceManager
 import androidx.wear.tiles.LayoutElementBuilders
 import androidx.wear.tiles.LayoutElementBuilders.Column
 import androidx.wear.tiles.LayoutElementBuilders.LayoutElement
@@ -12,12 +13,11 @@ import androidx.wear.tiles.TileProviderService
 import androidx.wear.tiles.TimelineBuilders
 import com.github.dawidowoc.iftile.R
 import com.github.dawidowoc.iftile.model.IntermittentFastingService
-import com.github.dawidowoc.iftile.model.IntermittentFastingTimeConfig
+import com.github.dawidowoc.iftile.persistence.FastingTimeConfigDao
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import java.time.Clock
 import java.time.Duration
-import java.time.LocalTime
 import java.time.ZoneId
 import kotlin.math.floor
 
@@ -25,14 +25,16 @@ private const val RESOURCES_VERSION = "1"
 private val REFRESH_INTERVAL = Duration.ofMinutes(1)
 
 class IfTileService : TileProviderService() {
-    private val intermittentFastingService =
-        IntermittentFastingService(
-            Clock.systemDefaultZone(), ZoneId.systemDefault(),
-            IntermittentFastingTimeConfig(LocalTime.of(20, 0), LocalTime.of(16, 0))
-        )
+    private lateinit var intermittentFastingService: IntermittentFastingService
 
     override fun onTileRequest(requestParams: RequestBuilders.TileRequest):
             ListenableFuture<TileBuilders.Tile> {
+        intermittentFastingService =
+            IntermittentFastingService(
+                Clock.systemDefaultZone(), ZoneId.systemDefault(),
+                FastingTimeConfigDao(PreferenceManager.getDefaultSharedPreferences(this))
+            )
+
         return Futures.immediateFuture(
             TileBuilders.Tile.builder().setResourcesVersion(RESOURCES_VERSION)
                 .setFreshnessIntervalMillis(REFRESH_INTERVAL.toMillis())

@@ -12,4 +12,7 @@
     <string name="fasting_status_label">Fasting now</string>
     <string name="eating_status_label">Eating now</string>
     <string name="status_change_time_left_label">Time left:</string>
+    
+    <string name="fasting_start_time_label">Fasting start time:</string>
+    <string name="fasting_end_time_label">Fasting end time:</string>
 </resources>

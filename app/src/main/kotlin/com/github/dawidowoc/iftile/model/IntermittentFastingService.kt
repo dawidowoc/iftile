@@ -1,5 +1,6 @@
 package com.github.dawidowoc.iftile.model
 
+import com.github.dawidowoc.iftile.persistence.FastingTimeConfigDao
 import java.time.Clock
 import java.time.Duration
 import java.time.LocalTime
@@ -8,13 +9,14 @@ import java.time.ZoneId
 class IntermittentFastingService(
     private val clock: Clock,
     private val zoneId: ZoneId,
-    private val fastingTimeConfig: IntermittentFastingTimeConfig
+    private val fastingTimeConfigDao: FastingTimeConfigDao
 ) {
 
     fun isFasting(): Boolean {
+        val fastingTimeConfig = fastingTimeConfigDao.getConfig()
         val currentLocalTime = getCurrentLocalTime()
 
-        return if (isFastingSpanningTwoDays()) {
+        return if (isFastingSpanningTwoDays(fastingTimeConfig)) {
             !(currentLocalTime > fastingTimeConfig.fastingEndTime
                     && currentLocalTime < fastingTimeConfig.fastingStartTime)
         } else {
@@ -24,6 +26,8 @@ class IntermittentFastingService(
     }
 
     fun timeLeftToStatusChange(): Duration {
+        val fastingTimeConfig = fastingTimeConfigDao.getConfig()
+
         val duration = if (isFasting()) Duration.between(
             getCurrentLocalTime(),
             fastingTimeConfig.fastingEndTime
@@ -34,6 +38,6 @@ class IntermittentFastingService(
 
     private fun getCurrentLocalTime() = LocalTime.from(clock.instant().atZone(zoneId))
 
-    private fun isFastingSpanningTwoDays() =
+    private fun isFastingSpanningTwoDays(fastingTimeConfig: IntermittentFastingTimeConfig) =
         fastingTimeConfig.fastingStartTime > fastingTimeConfig.fastingEndTime
 }
