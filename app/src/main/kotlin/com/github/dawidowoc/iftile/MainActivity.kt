@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.ViewGroup
 import android.widget.TextView
 import com.github.dawidowoc.iftile.databinding.ActivityMainBinding
 import com.github.dawidowoc.iftile.model.IntermittentFastingTimeConfig
@@ -29,6 +30,8 @@ class MainActivity : Activity() {
 
         val fastingStartTimeValueView = findViewById<TextView>(R.id.fasting_start_time_value)
         val fastingEndTimeValueView = findViewById<TextView>(R.id.fasting_end_time_value)
+        val fastingStartTimeViewGroup = findViewById<ViewGroup>(R.id.fasting_start_time_viewgroup)
+        val fastingEndTimeViewGroup = findViewById<ViewGroup>(R.id.fasting_end_time_viewgroup)
 
         val fastingTimeConfigSubject =
             BehaviorSubject.createDefault(fastingTimeConfigDao.getConfig())
@@ -38,7 +41,7 @@ class MainActivity : Activity() {
             fastingEndTimeValueView.text = it.fastingEndTime.toString()
         }
 
-        fastingStartTimeValueView.setOnClickListener {
+        fastingStartTimeViewGroup.setOnClickListener {
             showFastingTimePickerDialog(
                 fastingTimeConfigDao.getConfig().fastingStartTime,
                 fastingTimeConfigSubject
@@ -51,7 +54,7 @@ class MainActivity : Activity() {
             }
         }
 
-        fastingEndTimeValueView.setOnClickListener {
+        fastingEndTimeViewGroup.setOnClickListener {
             showFastingTimePickerDialog(
                 fastingTimeConfigDao.getConfig().fastingEndTime,
                 fastingTimeConfigSubject
