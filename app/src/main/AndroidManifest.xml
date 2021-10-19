@@ -47,6 +47,8 @@
             </intent-filter>
         </service>
 
+        <receiver android:name=".notification.NotificationBroadcastReceiver" />
+
     </application>
 
 </manifest>
