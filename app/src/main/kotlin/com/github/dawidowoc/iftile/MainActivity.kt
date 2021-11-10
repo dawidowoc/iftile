@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.github.dawidowoc.iftile.databinding.ActivityMainBinding
 import com.github.dawidowoc.iftile.model.IntermittentFastingTimeConfig
+import com.github.dawidowoc.iftile.notification.IFNotificationService
+import com.github.dawidowoc.iftile.notification.NotificationScheduler
 import com.github.dawidowoc.iftile.persistence.FastingTimeConfigDao
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.time.LocalTime
@@ -66,6 +68,9 @@ class MainActivity : Activity() {
                 )
             }
         }
+
+        val ifNotificationService = IFNotificationService(NotificationScheduler(this), this)
+        fastingTimeConfigSubject.subscribe { ifNotificationService.rescheduleAll(it) }
     }
 
     private fun showFastingTimePickerDialog(

@@ -1,4 +1,4 @@
-package com.github.dawidowoc.iftile.notification
+package com.github.dawidowoc.iftile.notification.internal
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
